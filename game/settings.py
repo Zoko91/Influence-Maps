@@ -3,9 +3,9 @@ Constants
 """
 
 # Sizes
-GRID_SIZE = 9
-WIDTH, HEIGHT = GRID_SIZE*100, (GRID_SIZE-2)*100
-CELL_SIZE = WIDTH // GRID_SIZE
+GRID_SIZE = 16
+WIDTH, HEIGHT = GRID_SIZE * 60, (GRID_SIZE - 4) * 60
+CELL_SIZE = WIDTH // GRID_SIZE  # Calculate new cell size
 
 # Colors
 ALLY_COLOR = (0, 255, 0)

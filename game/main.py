@@ -33,41 +33,25 @@ mountain_image = pygame.transform.scale(mountain_image, (CELL_SIZE, CELL_SIZE))
 
 def main():
     from draw import draw_grid, draw_pieces, draw_legend, place_random_mountains
-    from influence import draw_influence, calculate_influence
+    from influence import draw_influence
+    from events import handle_events
 
+    # Initialize the game
     global game_state
     running = True
-    influence_map = None  # Initialize influence map
-
     place_random_mountains(grid)
+    influence_map = None
+
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-            if game_state == PLACING_PIECES and event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
-                grid_x, grid_y = x // CELL_SIZE, y // CELL_SIZE
-                if grid_y < GRID_SIZE:
-                    if not grid[grid_x][grid_y] == "mountain":
-                        if event.button == 1:
-                            grid[grid_x][grid_y] = "ally"
-                        elif event.button == 3:
-                            grid[grid_x][grid_y] = "enemy"
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and game_state != GAME_STARTED:
-                    game_state = GAME_STARTED
-                    influence_map = calculate_influence(grid)
-
+        running, influence_map, game_state = handle_events(grid, game_state, influence_map)
         screen.fill((0, 0, 0))
 
         if game_state == PLACING_PIECES:
-            draw_grid(screen, [[0]*GRID_SIZE for _ in range(GRID_SIZE)])
+            draw_grid(screen, [[0]*GRID_SIZE for _ in range(GRID_SIZE)], grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
             draw_legend(screen)
-        elif game_state == GAME_STARTED:
-            draw_grid(screen, influence_map)
+        elif game_state == GAME_STARTED and influence_map is not None:
+            draw_grid(screen, influence_map, grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
             draw_influence(screen)
 

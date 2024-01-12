@@ -8,18 +8,19 @@ from main import font
 import random
 
 
-def draw_grid(screen, influence_map):
+def draw_grid(screen, influence_map, grid):
     for x in range(0, WIDTH, CELL_SIZE):
         for y in range(0, HEIGHT, CELL_SIZE):
             grid_x = x // CELL_SIZE
             grid_y = y // CELL_SIZE
             color = (255, 255, 255)  # Default color for neutral
-
             # Change color based on the influence value
             if influence_map[grid_x][grid_y] > 0:
                 color = (8, 107, 160)   # Light green for allies
             elif influence_map[grid_x][grid_y] < 0:
                 color = (230, 30, 30)  # Light red for enemies
+            if grid[grid_x][grid_y] == "mountain":
+                color = (196, 164, 132) # Light brown for mountains
 
             # Draw the cell with the appropriate color
             rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
@@ -66,15 +67,14 @@ def draw_legend(screen):
 
 
 def place_random_mountains(grid):
-    num_mountains = random.randint(2, 4)  # Randomly choose the number of mountains
+    num_mountains = random.randint(3, 6)  # Randomly choose the number of mountains
     for _ in range(num_mountains):
         while True:
             ########################
             # ATTENTION MONTAGNE !!!
             ########################
             x = random.randint(0, GRID_SIZE - 1)  # Random x-coordinate
-            # There is fewer rows than columns, plus the last row is used for legend thus explaining the -3 here
-            y = random.randint(0, GRID_SIZE - 3)  # Random y-coordinate
+            y = random.randint(0, GRID_SIZE - 4 - 1)  # Random y-coordinate
             if grid[x][y] is None:  # Check if the cell is empty
                 grid[x][y] = "mountain"
                 break

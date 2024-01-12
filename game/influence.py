@@ -18,6 +18,7 @@ def draw_influence(screen):
 
 def calculate_influence(grid):
     influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+
     def add_influence(x, y, amount):
         if 0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE:
             influence_map[x][y] += amount
