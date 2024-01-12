@@ -24,6 +24,9 @@ grid = [[None for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 wolf_image = pygame.image.load("../images/wolf.png")
 water_image = pygame.image.load("../images/water.png")
 mountain_image = pygame.image.load("../images/mountain.png")
+legend_bg = pygame.image.load("../images/parchemin.png")
+wolf_icon = pygame.image.load("../images/wolf_small.png")
+ally_icon = pygame.image.load("../images/water_small.png")
 
 # Resize the images to fit the cell size if needed
 wolf_image = pygame.transform.scale(wolf_image, (CELL_SIZE, CELL_SIZE))
@@ -49,7 +52,7 @@ def main():
         if game_state == PLACING_PIECES:
             draw_grid(screen, [[0]*GRID_SIZE for _ in range(GRID_SIZE)], grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
-            draw_legend(screen)
+            draw_legend(screen, wolf_icon, ally_icon)
         elif game_state == GAME_STARTED and influence_map is not None:
             draw_grid(screen, influence_map, grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)

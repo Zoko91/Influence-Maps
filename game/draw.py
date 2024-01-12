@@ -45,25 +45,59 @@ def draw_pieces(grid, screen, wolf_image, water_image, mountain_image):
                 screen.blit(mountain_image, (cell_x, cell_y))
 
 
-def draw_legend(screen):
+def draw_legend(screen, wolf_icon, ally_icon):
+    margin = 5
+    icon_size = 28
+    title_size = 36
+    padding_between_icons = 45
+    neutral_text_color = FONT_COLOR
+    legend_title_color = (0, 0, 0)
+
+    # Clear the legend area
     pygame.draw.rect(screen, INFO_BG_COLOR, (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT))
 
-    # Instructions
-    instructions = [
-        'Left Click: Place Ally',
-        'Right Click: Place Enemy',
-        'Space: Draw Influence Map'
+    # Create and draw a larger title for the legend
+    title_font = pygame.font.Font(None, title_size)
+    title_surface = title_font.render('Legend', True, legend_title_color)
+    screen.blit(title_surface, (WIDTH // 2 - title_surface.get_width() // 2, HEIGHT + margin))
+
+    # Calculate y position for the icons and text
+    y_position = HEIGHT + title_surface.get_height() + margin
+
+    # Define legend items with descriptions, icons, and colors
+    legend_items = [
+        {"description": 'Left Click: Place Ally', "icon": ally_icon, "color": (8, 107, 160)},
+        {"description": 'Right Click: Place Enemy', "icon": wolf_icon, "color": (230, 30, 30)},
     ]
 
-    # Height of the text to center it in the info area
-    total_text_height = sum([font.size(text)[1] for text in instructions]) + (len(instructions) - 1) * 10
-    start_y = HEIGHT + (INFO_AREA_HEIGHT - total_text_height) // 2
+    # Calculate the starting x position to center the icons and text horizontally
+    total_width_of_legend_items = sum([font.size(item["description"])[0] + icon_size for item in legend_items])
+    total_width_of_legend_items += padding_between_icons * (len(legend_items) - 1)
+    start_x = (WIDTH - total_width_of_legend_items) // 2 + 15
 
-    for text in instructions:
-        text_surface = font.render(text, True, FONT_COLOR)
-        centered_x = (WIDTH - text_surface.get_width()) // 2
-        screen.blit(text_surface, (centered_x, start_y))
-        start_y += text_surface.get_height() + 10
+    # Render the placing instructions and icons
+    for item in legend_items:
+        # Draw the icon if available
+        if item["icon"]:
+            # Resize and draw the icon
+            icon = pygame.transform.scale(item["icon"], (icon_size, icon_size))
+            screen.blit(icon, (start_x, y_position))
+
+        text_surface = font.render(item["description"], True, item["color"])
+        text_x = start_x + icon_size + margin  # Text starts after the icon and a margin
+        screen.blit(text_surface, (text_x, y_position+8))
+
+        # Resets start_x for next item
+        start_x += font.size(item["description"])[0] + icon_size + padding_between_icons
+
+    # Game control instructions
+    controls_text = 'Space: Start Game   |   Escape: End Game'
+    controls_surface = font.render(controls_text, True, neutral_text_color)
+    controls_x = WIDTH // 2 - controls_surface.get_width() // 2
+    y_position += icon_size + margin  # Update y_position for the control instructions
+    screen.blit(controls_surface, (controls_x, y_position))
+    # Borders
+    pygame.draw.rect(screen, (0, 0, 0), (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT), 1)
 
 
 def place_random_mountains(grid):
