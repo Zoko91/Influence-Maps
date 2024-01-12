@@ -4,16 +4,50 @@ Functions used to calculate and display the influence map
 
 from settings import *
 import pygame
-from main import font
 
 
-def draw_influence(screen):
+def draw_influence(screen, influence_image, best_village_position=(0, 0)):
+    # Constants
+    margin = 5
+    title_size = 36
+    text_size = 22
+    image_width, image_height = 40, 40
+    village_text_color = (255, 51, 51)  # Orange
+    title_text_color = (0, 0, 0)
+
+    # Clear the legend area
     pygame.draw.rect(screen, INFO_BG_COLOR, (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT))
-    game_started_text = 'Drawing Influence Map'
-    text_surface = font.render(game_started_text, True, (53, 40, 40))  # Red color
-    centered_x = (WIDTH - text_surface.get_width()) // 2
-    centered_y = HEIGHT + (INFO_AREA_HEIGHT - text_surface.get_height()) // 2
-    screen.blit(text_surface, (centered_x, centered_y))
+
+    # Title
+    title_font = pygame.font.Font(None, title_size)
+    title_surface = title_font.render('Game Ended', True, title_text_color)
+    title_x = (WIDTH - title_surface.get_width()) // 2
+    title_y = HEIGHT + margin
+    screen.blit(title_surface, (title_x, title_y))
+
+    # Image and font
+    influence_image_scaled = pygame.transform.scale(influence_image, (image_width, image_height))
+    font_main = pygame.font.Font(None, text_size)
+
+    # Text
+    village_text = f'The village has found a place to live (finally): {best_village_position[0]}, {best_village_position[1]}'
+    text_surface_village = font_main.render(village_text, True, village_text_color)
+
+    # Total width of the image and text to center them
+    total_content_width = image_width + text_surface_village.get_width() + margin
+    content_x_start = (WIDTH - total_content_width) // 2
+
+    # Show the image and center horizontally with the text
+    image_x = content_x_start
+    image_y = title_y + title_surface.get_height() + margin
+    screen.blit(influence_image_scaled, (image_x, image_y))
+
+    text_x_village = image_x + image_width + margin
+    text_y_village = image_y + (image_height - text_surface_village.get_height()) // 2
+    screen.blit(text_surface_village, (text_x_village, text_y_village))
+
+    # Border
+    pygame.draw.rect(screen, (0, 0, 0), (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT), 1)
 
 
 def calculate_influence(grid):

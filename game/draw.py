@@ -20,7 +20,7 @@ def draw_grid(screen, influence_map, grid):
             elif influence_map[grid_x][grid_y] < 0:
                 color = (230, 30, 30)  # Light red for enemies
             if grid[grid_x][grid_y] == "mountain":
-                color = (196, 164, 132) # Light brown for mountains
+                color = (196, 164, 132)  # Light brown for mountains
 
             # Draw the cell with the appropriate color
             rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
@@ -53,38 +53,33 @@ def draw_legend(screen, wolf_icon, ally_icon):
     neutral_text_color = FONT_COLOR
     legend_title_color = (0, 0, 0)
 
-    # Clear the legend area
+    # Clear legend area
     pygame.draw.rect(screen, INFO_BG_COLOR, (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT))
 
-    # Create and draw a larger title for the legend
+    # Title // Legend
     title_font = pygame.font.Font(None, title_size)
     title_surface = title_font.render('Legend', True, legend_title_color)
     screen.blit(title_surface, (WIDTH // 2 - title_surface.get_width() // 2, HEIGHT + margin))
 
-    # Calculate y position for the icons and text
     y_position = HEIGHT + title_surface.get_height() + margin
-
-    # Define legend items with descriptions, icons, and colors
     legend_items = [
         {"description": 'Left Click: Place Ally', "icon": ally_icon, "color": (8, 107, 160)},
         {"description": 'Right Click: Place Enemy', "icon": wolf_icon, "color": (230, 30, 30)},
     ]
 
-    # Calculate the starting x position to center the icons and text horizontally
+    # X position to center the icons and text horizontally
     total_width_of_legend_items = sum([font.size(item["description"])[0] + icon_size for item in legend_items])
     total_width_of_legend_items += padding_between_icons * (len(legend_items) - 1)
     start_x = (WIDTH - total_width_of_legend_items) // 2 + 15
 
-    # Render the placing instructions and icons
+    # Render
     for item in legend_items:
-        # Draw the icon if available
         if item["icon"]:
-            # Resize and draw the icon
             icon = pygame.transform.scale(item["icon"], (icon_size, icon_size))
             screen.blit(icon, (start_x, y_position))
 
         text_surface = font.render(item["description"], True, item["color"])
-        text_x = start_x + icon_size + margin  # Text starts after the icon and a margin
+        text_x = start_x + icon_size + margin
         screen.blit(text_surface, (text_x, y_position+8))
 
         # Resets start_x for next item
@@ -101,14 +96,14 @@ def draw_legend(screen, wolf_icon, ally_icon):
 
 
 def place_random_mountains(grid):
-    num_mountains = random.randint(3, 6)  # Randomly choose the number of mountains
+    num_mountains = random.randint(3, 6)
     for _ in range(num_mountains):
         while True:
             ########################
-            # ATTENTION MONTAGNE !!!
+            # ATTENTION MOUNTAINS !!!
             ########################
             x = random.randint(0, GRID_SIZE - 1)  # Random x-coordinate
             y = random.randint(0, GRID_SIZE - 4 - 1)  # Random y-coordinate
-            if grid[x][y] is None:  # Check if the cell is empty
+            if grid[x][y] is None:
                 grid[x][y] = "mountain"
                 break
