@@ -65,7 +65,7 @@ def main():
         if game_state == PLACING_PIECES:
             draw_grid(screen, [[0]*GRID_SIZE for _ in range(GRID_SIZE)])
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
-            # draw_legend(screen)
+            draw_legend(screen)
         elif game_state == GAME_STARTED:
             draw_grid(screen, influence_map)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)

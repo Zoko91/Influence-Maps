@@ -67,15 +67,14 @@ def draw_legend(screen):
 
 def place_random_mountains(grid):
     num_mountains = random.randint(2, 4)  # Randomly choose the number of mountains
-    print(num_mountains)
     for _ in range(num_mountains):
         while True:
-            ###########################################################"
-            # ATTENTION MONTAGNE BUG
-            ########################################################""
+            ########################
+            # ATTENTION MONTAGNE !!!
+            ########################
             x = random.randint(0, GRID_SIZE - 1)  # Random x-coordinate
-            y = random.randint(0, GRID_SIZE - 1)  # Random y-coordinate
-            print(x,y)
+            # There is fewer rows than columns, plus the last row is used for legend thus explaining the -3 here
+            y = random.randint(0, GRID_SIZE - 3)  # Random y-coordinate
             if grid[x][y] is None:  # Check if the cell is empty
                 grid[x][y] = "mountain"
                 break
