@@ -1,5 +1,5 @@
 """
-Functions used to display elements on the grid.
+Contains function to draw elements on the screen like images, grid, text, etc.
 """
 
 from settings import *

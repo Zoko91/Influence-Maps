@@ -1,5 +1,5 @@
 """
-Functions used to calculate and display the influence map
+Calculate the influence of each cell on the grid and display it on the screen.
 """
 
 from settings import *
@@ -12,7 +12,7 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
     title_size = 36
     text_size = 22
     image_width, image_height = 40, 40
-    village_text_color = (255, 51, 51)  # Orange
+    village_text_color = (255, 128, 0)  # Orange
     title_text_color = (0, 0, 0)
 
     # Clear the legend area
@@ -30,8 +30,10 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
     font_main = pygame.font.Font(None, text_size)
 
     # Text
-    village_text = f'The village has found a place to live (finally): {best_village_position[0]}, {best_village_position[1]}'
+    village_text = 'The village has (finally) found a place to live !'
+    village_location = f'X: {best_village_position[0]}     Y: {best_village_position[1]}'
     text_surface_village = font_main.render(village_text, True, village_text_color)
+    text_surface_location = font_main.render(village_location, True, (255, 51, 51))  # Red
 
     # Total width of the image and text to center them
     total_content_width = image_width + text_surface_village.get_width() + margin
@@ -45,6 +47,7 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
     text_x_village = image_x + image_width + margin
     text_y_village = image_y + (image_height - text_surface_village.get_height()) // 2
     screen.blit(text_surface_village, (text_x_village, text_y_village))
+    screen.blit(text_surface_location, (text_x_village+100, text_y_village+22))
 
     # Border
     pygame.draw.rect(screen, (0, 0, 0), (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT), 1)

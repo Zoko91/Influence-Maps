@@ -1,3 +1,7 @@
+"""
+Handle clicks, key presses, and other events.
+Starts game loop and initializes the game.
+"""
 from settings import *
 import pygame
 

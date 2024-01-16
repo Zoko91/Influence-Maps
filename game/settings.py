@@ -1,5 +1,5 @@
 """
-Constants
+This file contains all the settings/constants for the game.
 """
 
 # Sizes

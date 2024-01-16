@@ -1,9 +1,9 @@
 """
-Projet pour le cours : "IA pour les jeux vidéos"
-Auteur : Joseph Beasse
+Projet of the course : "IA pour les jeux vidéos"
+Author : Joseph Beasse
 Enseirb-Matmeca 2024
 
-Objectif : Créer une carte de jeu pour y inférer une map d'influence selon les élements placés.
+Goal : Implement a game of "Wolf and Sheep" with an influence map.
 """
 
 # Imports
