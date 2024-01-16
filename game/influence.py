@@ -56,23 +56,30 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
 def calculate_influence(grid):
     influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
-    def add_influence(x, y, amount):
-        if 0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE:
-            influence_map[x][y] += amount
+    ally_influence_strength = 1.0
+    enemy_influence_strength = -1.0
+    ally_decay_factor = 0.1
+    enemy_decay_factor = 0.1
+    max_influence_distance = 5
+
+    def add_influence(source_x, source_y, ally_strength, enemy_strength, ally_decay_factor, enemy_decay_factor):
+        for x in range(max(0, source_x - max_influence_distance),
+                       min(GRID_SIZE, source_x + max_influence_distance + 1)):
+            for y in range(max(0, source_y - max_influence_distance),
+                           min(GRID_SIZE, source_y + max_influence_distance + 1)):
+                distance = abs(source_x - x) + abs(source_y - y)
+                if distance <= max_influence_distance:
+                    ally_influence = ally_strength * ((max_influence_distance - distance) * ally_decay_factor)
+                    enemy_influence = enemy_strength * ((max_influence_distance - distance) * enemy_decay_factor)
+                    total_influence = ally_influence + enemy_influence
+                    influence_map[x][y] += total_influence
 
     for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
             if grid[x][y] == "ally":
-                add_influence(x, y, 1)
-                for dx in [-1, 0, 1]:
-                    for dy in [-1, 0, 1]:
-                        if dx != 0 or dy != 0:
-                            add_influence(x + dx, y + dy, 0.5)
+                add_influence(x, y, ally_influence_strength, 0.0, ally_decay_factor, enemy_decay_factor)
             elif grid[x][y] == "enemy":
-                add_influence(x, y, -1)
-                for dx in [-1, 0, 1]:
-                    for dy in [-1, 0, 1]:
-                        if dx != 0 or dy != 0:
-                            add_influence(x + dx, y + dy, -0.5)
+                add_influence(x, y, 0.0, enemy_influence_strength, ally_decay_factor, enemy_decay_factor)
 
     return influence_map
+
