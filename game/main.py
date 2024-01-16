@@ -51,7 +51,7 @@ def main():
         screen.fill((0, 0, 0))
 
         if game_state == PLACING_PIECES:
-            draw_grid(screen, [[0]*GRID_SIZE for _ in range(GRID_SIZE)], grid)
+            draw_grid(screen, ([[0]*GRID_SIZE for _ in range(GRID_SIZE)], [[0]*GRID_SIZE for _ in range(GRID_SIZE)]), grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
             draw_legend(screen, wolf_icon, ally_icon)
         elif game_state == GAME_STARTED and influence_map is not None:

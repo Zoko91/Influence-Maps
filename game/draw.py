@@ -8,31 +8,27 @@ from main import font
 import random
 
 
-# Updated draw_grid function
-def draw_grid(screen, influence_map, grid):
+def draw_grid(screen, influence_maps, grid):
     for x in range(0, WIDTH, CELL_SIZE):
         for y in range(0, HEIGHT, CELL_SIZE):
             grid_x = x // CELL_SIZE
             grid_y = y // CELL_SIZE
-            color = (255, 255, 255)  # Default color for neutral
+            color = (255, 255, 255)
+
             # Calculate influence colors
-            ally_influence = max(0, influence_map[grid_x][grid_y])
-            enemy_influence = max(0, -influence_map[grid_x][grid_y])
+            ally_influence = max(0, influence_maps[0][grid_x][grid_y])  # Ally influence
+            enemy_influence = max(-1, influence_maps[1][grid_x][grid_y])  # Enemy influence
             r = int(255 - ally_influence * 255)
-            g = int(255 - enemy_influence * 255)
+            g = int(255 + enemy_influence * 255)  # Adjust the green component based on enemy influence
             b = 255
             color = (r, g, b)
             if grid[grid_x][grid_y] == "mountain":
-                color = (196, 164, 132)  # Light brown for mountains
+                color = (196, 164, 132)
 
             # Draw the cell with the appropriate color
             rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, color, rect)
             pygame.draw.rect(screen, (200, 200, 200), rect, 1)  # Grid lines
-
-
-
-
 
 
 def draw_pieces(grid, screen, wolf_image, water_image, mountain_image):

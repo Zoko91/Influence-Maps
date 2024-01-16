@@ -54,7 +54,8 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
 
 
 def calculate_influence(grid):
-    influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+    ally_influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+    enemy_influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
     ally_influence_strength = 1.0
     enemy_influence_strength = -1.0
@@ -71,8 +72,8 @@ def calculate_influence(grid):
                 if distance <= max_influence_distance:
                     ally_influence = ally_strength * ((max_influence_distance - distance) * ally_decay_factor)
                     enemy_influence = enemy_strength * ((max_influence_distance - distance) * enemy_decay_factor)
-                    total_influence = ally_influence + enemy_influence
-                    influence_map[x][y] += total_influence
+                    ally_influence_map[x][y] += ally_influence
+                    enemy_influence_map[x][y] += enemy_influence
 
     for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
@@ -81,5 +82,6 @@ def calculate_influence(grid):
             elif grid[x][y] == "enemy":
                 add_influence(x, y, 0.0, enemy_influence_strength, ally_decay_factor, enemy_decay_factor)
 
-    return influence_map
+    return ally_influence_map, enemy_influence_map
+
 
