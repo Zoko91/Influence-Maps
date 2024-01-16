@@ -57,30 +57,31 @@ def calculate_influence(grid):
     ally_influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
     enemy_influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
-    ally_influence_strength = 1.0
-    enemy_influence_strength = -1.0
-    ally_decay_factor = 0.1
-    enemy_decay_factor = 0.1
-    max_influence_distance = 5
-
-    def add_influence(source_x, source_y, ally_strength, enemy_strength, ally_decay_factor, enemy_decay_factor):
-        for x in range(max(0, source_x - max_influence_distance),
-                       min(GRID_SIZE, source_x + max_influence_distance + 1)):
-            for y in range(max(0, source_y - max_influence_distance),
-                           min(GRID_SIZE, source_y + max_influence_distance + 1)):
+    def add_influence(source_x, source_y, ally_strength, enemy_strength, ally_decay_factor, enemy_decay_factor, ally_max_distance, enemy_max_distance):
+        for x in range(max(0, source_x - ally_max_distance),
+                       min(GRID_SIZE, source_x + ally_max_distance + 1)):
+            for y in range(max(0, source_y - ally_max_distance),
+                           min(GRID_SIZE, source_y + ally_max_distance + 1)):
                 distance = abs(source_x - x) + abs(source_y - y)
-                if distance <= max_influence_distance:
-                    ally_influence = ally_strength * ((max_influence_distance - distance) * ally_decay_factor)
-                    enemy_influence = enemy_strength * ((max_influence_distance - distance) * enemy_decay_factor)
+                if distance <= ally_max_distance:
+                    ally_influence = ally_strength * ((ally_max_distance - distance) * ally_decay_factor)
                     ally_influence_map[x][y] += ally_influence
+
+        for x in range(max(0, source_x - enemy_max_distance),
+                       min(GRID_SIZE, source_x + enemy_max_distance + 1)):
+            for y in range(max(0, source_y - enemy_max_distance),
+                           min(GRID_SIZE, source_y + enemy_max_distance + 1)):
+                distance = abs(source_x - x) + abs(source_y - y)
+                if distance <= enemy_max_distance:
+                    enemy_influence = enemy_strength * ((enemy_max_distance - distance) * enemy_decay_factor)
                     enemy_influence_map[x][y] += enemy_influence
 
     for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
             if grid[x][y] == "ally":
-                add_influence(x, y, ally_influence_strength, 0.0, ally_decay_factor, enemy_decay_factor)
+                add_influence(x, y, ALLY_INFLUENCE_STRENGTH, 0.0, ALLY_DECAY_FACTOR, ENEMY_DECAY_FACTOR, ALLY_MAX_INFLUENCE_DISTANCE, ENEMY_MAX_INFLUENCE_DISTANCE)
             elif grid[x][y] == "enemy":
-                add_influence(x, y, 0.0, enemy_influence_strength, ally_decay_factor, enemy_decay_factor)
+                add_influence(x, y, 0.0, ENEMY_INFLUENCE_STRENGTH, ALLY_DECAY_FACTOR, ENEMY_DECAY_FACTOR, ALLY_MAX_INFLUENCE_DISTANCE, ENEMY_MAX_INFLUENCE_DISTANCE)
 
     return ally_influence_map, enemy_influence_map
 

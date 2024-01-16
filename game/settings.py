@@ -5,11 +5,9 @@ This file contains all the settings/constants for the game.
 # Sizes
 GRID_SIZE = 16
 WIDTH, HEIGHT = GRID_SIZE * 60, (GRID_SIZE - 4) * 60
-CELL_SIZE = WIDTH // GRID_SIZE  # Calculate new cell size
+CELL_SIZE = WIDTH // GRID_SIZE
 
-# Colors
-ALLY_COLOR = (0, 255, 0)
-ENEMY_COLOR = (255, 0, 0)
+# Background and color information
 FONT_COLOR = (0, 0, 0)
 INFO_AREA_HEIGHT = 90
 INFO_BG_COLOR = (230, 230, 230)
@@ -17,3 +15,11 @@ INFO_BG_COLOR = (230, 230, 230)
 # Bools
 PLACING_PIECES = 0
 GAME_STARTED = 1
+
+# Influence parameters
+ALLY_INFLUENCE_STRENGTH = 0.4
+ENEMY_INFLUENCE_STRENGTH = -1.0
+ALLY_DECAY_FACTOR = 0.8
+ENEMY_DECAY_FACTOR = 0.2
+ALLY_MAX_INFLUENCE_DISTANCE = 3
+ENEMY_MAX_INFLUENCE_DISTANCE = 4
