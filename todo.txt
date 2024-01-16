@@ -1,8 +1,7 @@
 To do list:
+6. Mountains
 
-2. Maximum number of enemy/ally on the map
-3. New influence function that fades with distance and shade of color fades.
-4. A way to represent conflict zones
+
 
 
 
@@ -11,3 +10,6 @@ To do list:
 # DONE LIST #
 1. The influence should not change the color of a mountain
 5. Better legends, representing the number of ennemies/allies still possible to put on the map
+4. A way to represent conflict zones
+3. New influence function that fades with distance and shade of color fades.
+2. Maximum number of enemy/ally on the map
