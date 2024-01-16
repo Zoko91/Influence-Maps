@@ -18,8 +18,8 @@ def draw_grid(screen, influence_maps, grid):
             # Calculate influence colors
             ally_influence = max(0, influence_maps[0][grid_x][grid_y])  # Ally influence
             enemy_influence = max(-1, influence_maps[1][grid_x][grid_y])  # Enemy influence
-            r = int(255 - ally_influence * 255)
-            g = int(255 + enemy_influence * 255)  # Adjust the green component based on enemy influence
+            r = int(max(int(255 - ally_influence * 255), 0))
+            g = int(max(int(255 + enemy_influence * 255), 0))
             b = 255
             color = (r, g, b)
             if grid[grid_x][grid_y] == "mountain":
