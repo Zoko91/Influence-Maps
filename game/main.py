@@ -28,11 +28,13 @@ legend_bg = pygame.image.load("../images/parchemin.png")
 wolf_icon = pygame.image.load("../images/wolf_small.png")
 ally_icon = pygame.image.load("../images/water_small.png")
 influence_image = pygame.image.load("../images/firework2.png")
+village_image = pygame.image.load("../images/village.png")
 
 # Resize the images to fit the cell size if needed
 wolf_image = pygame.transform.scale(wolf_image, (CELL_SIZE, CELL_SIZE))
 water_image = pygame.transform.scale(water_image, (CELL_SIZE, CELL_SIZE))
 mountain_image = pygame.transform.scale(mountain_image, (CELL_SIZE, CELL_SIZE))
+village_image = pygame.transform.scale(village_image, (CELL_SIZE, CELL_SIZE))
 
 
 def main():
@@ -51,13 +53,13 @@ def main():
         screen.fill((0, 0, 0))
 
         if game_state == PLACING_PIECES:
-            draw_grid(screen, ([[0]*GRID_SIZE for _ in range(GRID_SIZE)], [[0]*GRID_SIZE for _ in range(GRID_SIZE)]), grid)
+            draw_grid(screen, None, grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
             draw_legend(screen, wolf_icon, ally_icon)
         elif game_state == GAME_STARTED and influence_map is not None:
             draw_grid(screen, influence_map, grid)
             draw_pieces(grid, screen, wolf_image, water_image, mountain_image)
-            draw_influence(screen, influence_image)
+            draw_influence(screen, influence_image, influence_map, grid, village_image)
 
         pygame.display.flip()
 

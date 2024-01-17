@@ -6,14 +6,24 @@ from settings import *
 import pygame
 
 
-def draw_influence(screen, influence_image, best_village_position=(0, 0)):
+def draw_influence(screen, influence_image, influence_map, grid, village_image):
     # Constants
     margin = 5
     title_size = 36
     text_size = 22
     image_width, image_height = 40, 40
-    village_text_color = (255, 128, 0)  # Orange
+    village_text_color = (33, 33, 33)  # Orange
     title_text_color = (0, 0, 0)
+
+    # Calculate the best village position based on the highest influence
+    best_village_position = (0, 0)
+    max_influence = -1  # Initialize
+    for x in range(GRID_SIZE):
+        for y in range(GRID_SIZE):
+            # Check if this cell has the highest influence
+            if influence_map[x][y] > max_influence and grid[x][y] != "mountain" and grid[x][y] != "ally" and grid[x][y] != "enemy":
+                max_influence = influence_map[x][y]
+                best_village_position = (x, y)
 
     # Clear the legend area
     pygame.draw.rect(screen, INFO_BG_COLOR, (0, HEIGHT, WIDTH, INFO_AREA_HEIGHT))
@@ -44,6 +54,13 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
     image_y = title_y + title_surface.get_height() + margin
     screen.blit(influence_image_scaled, (image_x, image_y))
 
+    # Calculate the position of the village image
+    village_image_x = best_village_position[0] * CELL_SIZE  # Adjust for grid position
+    village_image_y = best_village_position[1] * CELL_SIZE  # Adjust for grid position
+
+    # Display the village image at the calculated position
+    screen.blit(village_image, (village_image_x, village_image_y))
+
     text_x_village = image_x + image_width + margin
     text_y_village = image_y + (image_height - text_surface_village.get_height()) // 2
     screen.blit(text_surface_village, (text_x_village, text_y_village))
@@ -54,35 +71,24 @@ def draw_influence(screen, influence_image, best_village_position=(0, 0)):
 
 
 def calculate_influence(grid):
-    ally_influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
-    enemy_influence_map = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+    influence_map = [[0.0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
-    def add_influence(source_x, source_y, ally_strength, enemy_strength, ally_decay_factor, enemy_decay_factor, ally_max_distance, enemy_max_distance):
-        for x in range(max(0, source_x - ally_max_distance),
-                       min(GRID_SIZE, source_x + ally_max_distance + 1)):
-            for y in range(max(0, source_y - ally_max_distance),
-                           min(GRID_SIZE, source_y + ally_max_distance + 1)):
+    def add_influence(source_x, source_y, strength, decay_factor, max_distance):
+        for x in range(max(0, source_x - max_distance),
+                       min(GRID_SIZE, source_x + max_distance + 1)):
+            for y in range(max(0, source_y - max_distance),
+                           min(GRID_SIZE, source_y + max_distance + 1)):
                 distance = abs(source_x - x) + abs(source_y - y)
-                if distance <= ally_max_distance:
-                    ally_influence = ally_strength * ((ally_max_distance - distance) * ally_decay_factor)
-                    ally_influence_map[x][y] += ally_influence
-
-        for x in range(max(0, source_x - enemy_max_distance),
-                       min(GRID_SIZE, source_x + enemy_max_distance + 1)):
-            for y in range(max(0, source_y - enemy_max_distance),
-                           min(GRID_SIZE, source_y + enemy_max_distance + 1)):
-                distance = abs(source_x - x) + abs(source_y - y)
-                if distance <= enemy_max_distance:
-                    enemy_influence = enemy_strength * ((enemy_max_distance - distance) * enemy_decay_factor)
-                    enemy_influence_map[x][y] += enemy_influence
+                if distance <= max_distance:
+                    influence = strength * ((max_distance - distance) * decay_factor)
+                    influence_map[x][y] += influence
 
     for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
             if grid[x][y] == "ally":
-                add_influence(x, y, ALLY_INFLUENCE_STRENGTH, 0.0, ALLY_DECAY_FACTOR, ENEMY_DECAY_FACTOR, ALLY_MAX_INFLUENCE_DISTANCE, ENEMY_MAX_INFLUENCE_DISTANCE)
+                add_influence(x, y, ALLY_INFLUENCE_STRENGTH, ALLY_DECAY_FACTOR, ALLY_MAX_INFLUENCE_DISTANCE)
             elif grid[x][y] == "enemy":
-                add_influence(x, y, 0.0, ENEMY_INFLUENCE_STRENGTH, ALLY_DECAY_FACTOR, ENEMY_DECAY_FACTOR, ALLY_MAX_INFLUENCE_DISTANCE, ENEMY_MAX_INFLUENCE_DISTANCE)
+                add_influence(x, y, ENEMY_INFLUENCE_STRENGTH, ENEMY_DECAY_FACTOR, ENEMY_MAX_INFLUENCE_DISTANCE)
 
-    return ally_influence_map, enemy_influence_map
-
+    return influence_map
 

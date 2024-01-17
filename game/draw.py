@@ -8,24 +8,30 @@ from main import font
 import random
 
 
-def draw_grid(screen, influence_maps, grid):
+def draw_grid(screen, influence_map, grid):
     for x in range(0, WIDTH, CELL_SIZE):
         for y in range(0, HEIGHT, CELL_SIZE):
             grid_x = x // CELL_SIZE
             grid_y = y // CELL_SIZE
-            color = (255, 255, 255)
 
-            # Calculate influence colors
-            ally_influence = max(0, influence_maps[0][grid_x][grid_y])  # Ally influence
-            enemy_influence = max(-1, influence_maps[1][grid_x][grid_y])  # Enemy influence
-            r = int(max(int(255 - ally_influence * 255), 0))
-            g = int(max(int(255 + enemy_influence * 255), 0))
-            b = 255
-            color = (r, g, b)
+            if influence_map is None:
+                color = (255, 255, 255)
+            else:
+                influence = influence_map[grid_x][grid_y]
+                min_influence = min(ALLY_INFLUENCE_STRENGTH, ENEMY_INFLUENCE_STRENGTH)
+                max_influence = max(ALLY_INFLUENCE_STRENGTH, ENEMY_INFLUENCE_STRENGTH)
+
+                # Rescale the influence to the grayscale color range and ensure it's within [0, 1]
+                rescaled_influence = (influence - min_influence) / (max_influence - min_influence)
+                rescaled_influence = max(0, min(1, rescaled_influence))
+
+                # Convert the rescaled influence to a grayscale color between 20 and 255
+                gray_value = int(20 + (235 * rescaled_influence))
+                color = (gray_value, gray_value, gray_value)
+
             if grid[grid_x][grid_y] == "mountain":
                 color = (196, 164, 132)
 
-            # Draw the cell with the appropriate color
             rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, color, rect)
             pygame.draw.rect(screen, (200, 200, 200), rect, 1)  # Grid lines
@@ -103,7 +109,7 @@ def place_random_mountains(grid):
     for _ in range(num_mountains):
         while True:
             ########################
-            # ATTENTION MOUNTAINS !!!
+            # ATTENTION MOUNTAINS !!
             ########################
             x = random.randint(0, GRID_SIZE - 1)  # Random x-coordinate
             y = random.randint(0, GRID_SIZE - 4 - 1)  # Random y-coordinate
